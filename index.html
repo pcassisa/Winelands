@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Pool Service – Complete Visit</title>
+<meta name="theme-color" content="#0a2d6e" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Pool Service" />
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap');
+
+:root {
+  --blue: #0a2d6e;
+  --blue-mid: #1e4a8c;
+  --blue-light: #3a7bd5;
+  --blue-tint: #eef4ff;
+  --green: #0f7a3e;
+  --green-tint: #edfaf3;
+  --surface: #ffffff;
+  --bg: #f0f3f9;
+  --border: #e0e6f0;
+  --text: #1a1a2e;
+  --muted: #6b7a99;
+  --radius: 14px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  background: var(--blue);
+  color: white;
+  padding: calc(16px + var(--safe-top)) 16px 14px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.topbar-title { font-size: 14px; font-weight: 600; letter-spacing: -0.3px; }
+.topbar-sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+
+/* ── LOCATION STRIP ── */
+.loc-strip {
+  background: var(--blue-mid);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.loc-dot { width: 8px; height: 8px; background: #5af0b0; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 6px #5af0b0; }
+.loc-name { font-size: 13px; font-weight: 500; color: white; }
+.loc-date { font-size: 12px; color: rgba(255,255,255,0.55); margin-left: auto; }
+.loc-select {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='rgba(255,255,255,0.7)'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 2px center;
+  padding-right: 16px;
+  cursor: pointer;
+  outline: none;
+}
+
+/* ── CONTENT ── */
+.content {
+  padding: 12px 12px calc(24px + var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--blue-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.card-title svg { flex-shrink: 0; }
+.card-title.green { color: var(--green); }
+
+/* ── FORM FIELDS ── */
+.field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+.field:last-child { margin-bottom: 0; }
+.field label { font-size: 11px; color: var(--muted); font-weight: 500; }
+.field input, .field select, .field textarea {
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 13px;
+  font-size: 15px;
+  color: var(--text);
+  background: #fafbfd;
+  outline: none;
+  width: 100%;
+  font-family: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--blue-light);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(58,123,213,0.12);
+}
+.field textarea { resize: none; height: 84px; line-height: 1.5; }
+
+/* ── PHOTOS ── */
+.photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.photo-label { font-size: 11px; color: var(--muted); font-weight: 500; margin-bottom: 6px; }
+.photo-box {
+  aspect-ratio: 4/3;
+  border-radius: 10px;
+  border: 1.5px dashed #c8d4e8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.15s, background 0.15s;
+  background: #f5f7fc;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.photo-box.before { background: #edf7f2; border-color: #b2dcc9; }
+.photo-box.after  { background: #eaf3fb; border-color: #a8ccec; }
+.photo-box:active { transform: scale(0.97); }
+.photo-box svg { width: 28px; height: 28px; opacity: 0.4; }
+.photo-hint { font-size: 11px; color: var(--muted); margin-top: 5px; }
+.photo-box img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; border-radius: 10px; }
+.photo-retake {
+  position: absolute; bottom: 6px; right: 6px;
+  background: rgba(0,0,0,0.52); color: white;
+  font-size: 10px; padding: 3px 8px; border-radius: 20px;
+  display: none;
+}
+.photo-box:has(img) .photo-retake { display: block; }
+.photo-box:has(img) svg, .photo-box:has(img) .photo-hint { display: none; }
+
+/* ── CHECKLIST ROWS ── */
+.check-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  background: #fafbfd;
+  margin-bottom: 7px;
+  transition: border-color 0.15s, background 0.15s;
+  -webkit-user-select: none; user-select: none;
+}
+.check-row:last-child { margin-bottom: 0; }
+.check-row.active { border-color: var(--blue-mid); background: var(--blue-tint); }
+.check-row.green-active { border-color: var(--green); background: var(--green-tint); }
+.chk-box {
+  width: 18px; height: 18px;
+  border: 2px solid #c8d4e8;
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  background: white;
+  transition: background 0.15s, border-color 0.15s;
+}
+.check-row.active .chk-box { background: var(--blue-mid); border-color: var(--blue-mid); }
+.check-row.green-active .chk-box { background: var(--green); border-color: var(--green); }
+.chk-mark { display: none; color: white; font-size: 11px; line-height: 1; font-weight: 700; }
+.check-row.active .chk-mark, .check-row.green-active .chk-mark { display: block; }
+.chk-label { font-size: 14px; color: #333; flex: 1; }
+.check-row.green-active .chk-label { color: #0a5c2e; font-weight: 500; }
+.r-input {
+  width: 62px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 5px 8px;
+  font-size: 13px;
+  font-family: 'DM Mono', monospace;
+  color: var(--text);
+  background: white;
+  outline: none;
+  text-align: center;
+  transition: border-color 0.15s;
+}
+.r-input:focus { border-color: var(--blue-light); }
+.co-badge {
+  font-size: 10px; font-weight: 600;
+  padding: 3px 9px; border-radius: 20px;
+  background: #d4f0e2; color: #0a5c2e;
+  display: none;
+}
+.check-row.green-active .co-badge { display: block; }
+
+/* ── SERVICE COST ── */
+.cost-row-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 13px;
+  background: #fafbfd;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+.cost-row-item:last-child { margin-bottom: 0; }
+.cost-row-label { font-size: 14px; color: #555; }
+.cost-select {
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  padding: 7px 30px 7px 12px;
+  font-size: 14px; font-weight: 500;
+  color: var(--blue-mid);
+  background: white;
+  font-family: inherit;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%231e4a8c'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer; outline: none;
+}
+.cost-select:focus { border-color: var(--blue-light); }
+.add-fee-input {
+  width: 100px;
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  padding: 7px 10px;
+  font-size: 14px; font-weight: 500;
+  color: var(--blue-mid);
+  background: white; outline: none;
+  text-align: right; font-family: inherit;
+  transition: border-color 0.15s;
+}
+.add-fee-input:focus { border-color: var(--blue-light); }
+.add-fee-input::placeholder { color: #bbb; font-weight: 400; }
+
+.add-fee-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.add-fee-prefix {
+  position: absolute;
+  left: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue-mid);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.add-fee-wrap.has-value .add-fee-prefix { opacity: 1; }
+.add-fee-wrap.has-value .add-fee-input { padding-left: 22px; }
+
+/* ── CHEMICALS ── */
+/* ── CHEM ROWS (new style) ── */
+.chem-item {
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 11px 12px;
+  margin-bottom: 8px;
+  background: #fafbfd;
+  transition: border-color 0.15s, background 0.15s;
+}
+.chem-item:last-child { margin-bottom: 0; }
+.chem-item.has-value { border-color: var(--blue-light); background: var(--blue-tint); }
+.chem-item-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.chem-item-name { font-size: 13px; font-weight: 500; color: var(--text); flex: 1; }
+.chem-price-badge {
+  font-size: 13px; font-weight: 600;
+  font-family: 'DM Mono', monospace;
+  color: var(--blue-mid);
+  background: white;
+  border: 1.5px solid var(--blue-light);
+  border-radius: 8px;
+  padding: 4px 9px;
+  min-width: 70px;
+  text-align: right;
+  display: none;
+}
+.chem-item.has-value .chem-price-badge { display: block; }
+.chem-item-bottom { display: flex; gap: 8px; align-items: center; }
+.chem-size-select {
+  flex: 1;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 28px 8px 10px;
+  font-size: 13px;
+  color: var(--text);
+  background: white;
+  font-family: inherit;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%236b7a99'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.chem-size-select:focus { border-color: var(--blue-light); }
+.chem-qty-wrap {
+  display: flex; align-items: center; gap: 0;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  flex-shrink: 0;
+}
+.chem-qty-btn {
+  width: 32px; height: 36px;
+  border: none; background: none;
+  font-size: 18px; color: var(--blue-mid);
+  cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.1s;
+}
+.chem-qty-btn:active { background: var(--blue-tint); }
+.chem-qty-val {
+  width: 28px; text-align: center;
+  font-size: 14px; font-weight: 600;
+  font-family: 'DM Mono', monospace;
+  color: var(--text);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  line-height: 36px;
+}
+.chem-price-manual {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 8px;
+  font-size: 13px;
+  font-family: 'DM Mono', monospace;
+  color: var(--text);
+  background: white;
+  width: 80px;
+  outline: none;
+  text-align: right;
+  transition: border-color 0.15s;
+  flex-shrink: 0;
+}
+.chem-price-manual:focus { border-color: var(--blue-light); }
+
+.chem-subtotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--blue);
+  border-radius: 10px;
+}
+.chem-subtotal-label { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.75); }
+.chem-subtotal-val   { font-size: 16px; font-weight: 600; color: white; font-family: 'DM Mono', monospace; }
+
+/* ── COST SUMMARY ── */
+.cost-summary {
+  background: var(--blue);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.cost-summary-title {
+  color: white; font-size: 12px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.6px;
+  margin-bottom: 12px; display: flex; align-items: center; gap: 7px;
+}
+.cs-row { display: flex; justify-content: space-between; padding: 5px 0; }
+.cs-row span:first-child { font-size: 13px; color: rgba(255,255,255,0.6); }
+.cs-row span:last-child { font-size: 13px; color: white; font-weight: 500; font-family: 'DM Mono', monospace; }
+.cs-divider { height: 1px; background: rgba(255,255,255,0.12); margin: 10px 0; }
+.cs-total {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 14px;
+  background: white;
+  border-radius: 10px;
+  margin-top: 12px;
+}
+.cs-total-label { font-size: 15px; font-weight: 600; color: var(--blue); }
+.cs-total-val { font-size: 20px; font-weight: 600; color: var(--blue); font-family: 'DM Mono', monospace; }
+
+/* ── SUBMIT BUTTON ── */
+.submit-btn {
+  width: 100%;
+  background: var(--blue-mid);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 17px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  transition: background 0.15s, transform 0.1s;
+  -webkit-appearance: none;
+  box-shadow: 0 4px 16px rgba(30,74,140,0.3);
+}
+/* ── REPORT MODAL ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,20,50,0.6);
+  z-index: 200;
+  padding: 16px;
+  overflow-y: auto;
+  backdrop-filter: blur(3px);
+}
+.modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+.report {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  margin: auto;
+}
+.report-header {
+  background: var(--blue);
+  padding: 20px 20px 16px;
+  color: white;
+}
+.report-logo { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 4px; }
+.report-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
+.report-meta { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
+.report-meta-item { display: flex; flex-direction: column; gap: 2px; }
+.report-meta-label { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
+.report-meta-val { font-size: 13px; color: white; font-weight: 500; }
+.report-body { padding: 0 16px 16px; }
+.report-section { margin-top: 16px; }
+.report-section-title {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--muted);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+.report-table { width: 100%; border-collapse: collapse; }
+.report-table td {
+  padding: 7px 8px;
+  font-size: 13px;
+  border-bottom: 1px solid #f0f3f9;
+  vertical-align: top;
+}
+.report-table tr:last-child td { border-bottom: none; }
+.report-table td:first-child { color: var(--muted); width: 42%; }
+.report-table td:last-child { color: var(--text); font-weight: 500; text-align: right; }
+.report-check-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid #f0f3f9; font-size: 13px; color: var(--text); }
+.report-check-row:last-child { border-bottom: none; }
+.report-tick { width: 16px; height: 16px; background: var(--blue-mid); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 9px; color: white; font-weight: 700; }
+.report-cost-table { width: 100%; border-collapse: collapse; }
+.report-cost-table td { padding: 7px 8px; font-size: 13px; border-bottom: 1px solid #f0f3f9; }
+.report-cost-table tr:last-child td { border-bottom: none; }
+.report-cost-table td:first-child { color: var(--muted); }
+.report-cost-table td:last-child { text-align: right; font-family: 'DM Mono', monospace; font-weight: 500; color: var(--text); }
+.report-total-row {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--blue);
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.report-total-label { font-size: 14px; font-weight: 600; color: white; }
+.report-total-val { font-size: 20px; font-weight: 600; color: white; font-family: 'DM Mono', monospace; }
+.report-notes { font-size: 13px; color: var(--text); line-height: 1.6; background: #f8f9fc; border-radius: 8px; padding: 10px 12px; }
+.report-footer { background: #f8f9fc; border-top: 1px solid var(--border); padding: 14px 16px; display: flex; gap: 10px; }
+.report-btn {
+  flex: 1; padding: 13px; border-radius: 10px; border: none;
+  font-size: 14px; font-weight: 600; font-family: inherit;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.report-btn:active { transform: scale(0.97); opacity: 0.85; }
+.report-btn-cancel { background: var(--border); color: var(--muted); flex: 0 0 80px; }
+.report-btn-send { background: #25D366; color: white; }
+.report-photo-wrap { flex: 1; }
+.report-photo-label { font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.report-photo-thumb-wrap { position: relative; }
+.report-photo { width: 100%; aspect-ratio: 4/3; border-radius: 8px; object-fit: cover; border: 1px solid var(--border); display: block; }
+.report-photo-save {
+  display: block; width: 100%; margin-top: 5px;
+  background: var(--blue-tint); color: var(--blue-mid);
+  border: 1px solid var(--blue-light); border-radius: 7px;
+  padding: 5px 0; font-size: 11px; font-weight: 600;
+  text-align: center; cursor: pointer; font-family: inherit;
+  text-decoration: none;
+}
+.report-no-photo { flex: 1; aspect-ratio: 4/3; border-radius: 8px; background: #f0f3f9; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--muted); border: 1px dashed var(--border); }
+
+/* Email action split buttons */
+.email-actions { display: flex; gap: 8px; flex: 1; min-width: 120px; }
+.btn-pdf   { background: #1e4a8c; color: white; }
+.btn-mailto { background: #e8f0fb; color: #1e4a8c; border: 1.5px solid #3a7bd5; }
+.report-actions {
+  display: flex; gap: 8px; padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  background: #f8f9fc;
+  flex-wrap: wrap;
+}
+.action-btn {
+  flex: 1; min-width: 120px;
+  padding: 11px 8px; border-radius: 10px; border: none;
+  font-size: 13px; font-weight: 600; font-family: inherit;
+  cursor: pointer; display: flex; align-items: center;
+  justify-content: center; gap: 6px;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.action-btn:active { transform: scale(0.97); opacity: 0.85; }
+.btn-back    { background: var(--border); color: var(--muted); flex: 0 0 60px; min-width: unset; }
+.btn-whatsapp { background: #25D366; color: white; }
+.btn-email   { background: var(--blue-mid); color: white; }
+
+/* Photo attach guide */
+.photo-attach-guide {
+  display: none;
+  background: #fffbe6;
+  border-top: 1px solid #f0e68c;
+  padding: 12px 16px;
+  font-size: 12px; color: #7a6000; line-height: 1.7;
+}
+.photo-attach-guide ol { padding-left: 18px; margin-top: 4px; }
+.photo-attach-guide strong { color: #5a4000; }
+
+</style>
+</head>
+<body>
+
+<!-- Hidden camera inputs -->
+<input type="file" id="input-before" accept="image/*" style="display:none" onchange="loadPhoto(this,'before')" />
+<input type="file" id="input-after"  accept="image/*" style="display:none" onchange="loadPhoto(this,'after')" />
+
+<div class="topbar">
+  <div>
+    <div class="topbar-title">Winelands Pool Services: Visit Report</div>
+  </div>
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+    <path d="M14 2C14 2 4 13 4 18a10 10 0 0020 0C24 13 14 2 14 2z" stroke="rgba(255,255,255,0.55)" stroke-width="1.5"/>
+    <path d="M9 20c1-3 3-5 5-5s4 2 5 5" stroke="rgba(255,255,255,0.4)" stroke-width="1.2" stroke-linecap="round"/>
+  </svg>
+</div>
+
+<div class="loc-strip">
+  <div class="loc-dot"></div>
+  <select class="loc-select" id="estateSelect">
+    <option value="Val de Vie">Val de Vie</option>
+    <option value="Pearl Valley">Pearl Valley</option>
+    <option value="Boschenmeer">Boschenmeer</option>
+  </select>
+  <span class="loc-date" id="locDate"></span>
+</div>
+
+<div class="content">
+
+  <!-- CLIENT INFO -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="3" stroke="#1e4a8c" stroke-width="1.4"/><path d="M2 13c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#1e4a8c" stroke-width="1.4"/></svg>
+      Client Info
+    </div>
+    <div class="field"><label>Client Name</label><input type="text" placeholder="e.g. Jane Smith" id="clientName" autocomplete="name" /></div>
+    <div class="field"><label>Address</label><input type="text" placeholder="e.g. 12 Rose Street, Val de Vie" id="clientAddress" autocomplete="street-address" /></div>
+    <div class="field"><label>Mobile Number</label><input type="tel" placeholder="e.g. 082 000 0000" id="clientMobile" autocomplete="tel" /></div>
+    <div class="field"><label>Email Address</label><input type="email" placeholder="e.g. jane@example.com" id="clientEmail" autocomplete="email" /></div>
+    <div class="field"><label>Visit Date</label><input type="date" id="visitDate" onchange="syncDate()" /></div>
+  </div>
+
+  <!-- PHOTOS -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="1.5" stroke="#1e4a8c" stroke-width="1.4"/><circle cx="7" cy="7.5" r="2" stroke="#1e4a8c" stroke-width="1.2"/><path d="M5 3V2h4v1" stroke="#1e4a8c" stroke-width="1.2"/></svg>
+      Photos
+    </div>
+    <div class="photo-grid">
+      <div>
+        <div class="photo-label">Before</div>
+        <div class="photo-box before" id="box-before" onclick="document.getElementById('input-before').click()">
+          <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="8" width="24" height="16" rx="2" stroke="#0f7a3e" stroke-width="1.5"/><circle cx="16" cy="16" r="4" stroke="#0f7a3e" stroke-width="1.2"/></svg>
+          <span class="photo-hint">Tap to capture</span>
+          <span class="photo-retake">Retake</span>
+        </div>
+      </div>
+      <div>
+        <div class="photo-label">After</div>
+        <div class="photo-box after" id="box-after" onclick="document.getElementById('input-after').click()">
+          <svg viewBox="0 0 32 32" fill="none"><rect x="4" y="8" width="24" height="16" rx="2" stroke="#1e4a8c" stroke-width="1.5"/><circle cx="16" cy="16" r="4" stroke="#1e4a8c" stroke-width="1.2"/></svg>
+          <span class="photo-hint">Tap to capture</span>
+          <span class="photo-retake">Retake</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WATER TEST -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1C7 1 2 6 2 9a5 5 0 0010 0c0-3-5-8-5-8z" stroke="#1e4a8c" stroke-width="1.4"/></svg>
+      Water Test Results
+    </div>
+    <div class="check-row" onclick="toggleCheck(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><span class="chk-label">Chlorine</span><input class="r-input" type="text" onclick="event.stopPropagation()" placeholder="—" /></div>
+    <div class="check-row" onclick="toggleCheck(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><span class="chk-label">pH</span><input class="r-input" type="text" onclick="event.stopPropagation()" placeholder="—" /></div>
+    <div class="check-row" onclick="toggleCheck(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><span class="chk-label">Alkalinity</span><input class="r-input" type="text" onclick="event.stopPropagation()" placeholder="—" /></div>
+    <div class="check-row" onclick="toggleCheck(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><span class="chk-label">Stabilizer</span><input class="r-input" type="text" onclick="event.stopPropagation()" placeholder="—" /></div>
+  </div>
+
+  <!-- CHEMICALS -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 1h4M6 1v4L3 11a2 2 0 004 0M8 1v4l3 6a2 2 0 01-4 0" stroke="#1e4a8c" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Chemicals Used
+    </div>
+    <div id="chem-list"></div>
+    <div class="chem-subtotal" id="chemSubtotal">
+      <span class="chem-subtotal-label">Chemicals Total</span>
+      <span class="chem-subtotal-val" id="chemSubtotalVal">R0.00</span>
+    </div>
+  </div>
+
+  <!-- SERVICE COST -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="#1e4a8c" stroke-width="1.4"/><path d="M4 7h6M4 9h3" stroke="#1e4a8c" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Service Cost
+    </div>
+    <div class="cost-row-item">
+      <span class="cost-row-label">Service fee</span>
+      <select class="cost-select" id="serviceFeeSelect" onchange="recalc()">
+        <option value="350">R350</option>
+        <option value="280">R280</option>
+        <option value="700">R700</option>
+      </select>
+    </div>
+    <div class="cost-row-item">
+      <span class="cost-row-label">Additional fee</span>
+      <div class="add-fee-wrap">
+        <span class="add-fee-prefix" id="addFeePrefix">R</span>
+        <input class="add-fee-input" type="number" id="additionalFee" placeholder="0.00" min="0" step="0.5" oninput="recalc()" />
+      </div>
+    </div>
+    <div class="chem-subtotal" style="margin-top:12px;">
+      <span class="chem-subtotal-label">Service Total</span>
+      <span class="chem-subtotal-val" id="serviceTotalVal">R350.00</span>
+    </div>
+  </div>
+
+  <!-- SERVICES PERFORMED -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M2 7h10M2 10h6" stroke="#1e4a8c" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Pool Services Performed
+    </div>
+    <div class="check-row" onclick="toggleCheck(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><span class="chk-label">Skim, Brush, Weir &amp; Pump cleans</span></div>
+    <div class="check-row" onclick="toggleCheck(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><span class="chk-label">Check Pump, Sump, APC, Timer</span></div>
+    <div class="check-row" onclick="toggleCheck(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><span class="chk-label">Check Filter, suction leaks, APC hoses</span></div>
+  </div>
+
+  <!-- CLOSE OUT -->
+  <div class="card">
+    <div class="card-title green">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3" stroke="#0f7a3e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Close Out Checks
+    </div>
+    <div class="check-row" onclick="toggleGreenCheck(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><span class="chk-label">Pool is set back to Filter</span><span class="co-badge">Done</span></div>
+    <div class="check-row" onclick="toggleGreenCheck(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><span class="chk-label">All taps/hoses are off</span><span class="co-badge">Done</span></div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1.5" stroke="#1e4a8c" stroke-width="1.4"/><path d="M4 4h6M4 6.5h6M4 9h3.5" stroke="#1e4a8c" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Notes
+    </div>
+    <div class="field" style="margin:0"><textarea id="visitNotes" placeholder="Add any observations, issues or follow-up actions..."></textarea></div>
+  </div>
+
+  <!-- COST SUMMARY -->
+  <div class="cost-summary">
+    <div class="cost-summary-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="white" stroke-width="1.4"/><path d="M4 7h6M4 9h3" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Cost Summary
+    </div>
+    <div class="cs-row"><span>Service Fee</span><span id="serviceFeeDisplay">R350.00</span></div>
+    <div class="cs-row"><span>Additional Fee</span><span id="additionalFeeDisplay">R0.00</span></div>
+    <div class="cs-row"><span>Chemicals Total</span><span id="chemTotal">R0.00</span></div>
+    <div class="cs-total">
+      <span class="cs-total-label">Total</span>
+      <span class="cs-total-val" id="grandTotal">R350.00</span>
+    </div>
+  </div>
+
+  <!-- TECHNICIAN -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="3" stroke="#1e4a8c" stroke-width="1.4"/><path d="M2 13c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#1e4a8c" stroke-width="1.4"/></svg>
+      Technician Name
+    </div>
+    <div class="field" style="margin:0"><input type="text" placeholder="e.g. John Doe" id="techName" autocomplete="name" /></div>
+  </div>
+
+  <!-- SUBMIT -->
+  <button class="submit-btn" onclick="handleSubmit()">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M1 9.5l5.5 5.5L17 3" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Submit &amp; Send via WhatsApp
+  </button>
+
+</div><!-- /content -->
+
+<script>
+// ── Chemical catalogue ──────────────────────────────────────────────
+// sizes: array of { label, price } — price null = manual entry required
+const CHEMICALS = [
+  { name: 'Chlorine', sizes: [
+      { label: 'Large',   price: 175.00 },
+      { label: 'Small',   price: 156.00 },
+      { label: 'Per Cup', price: 19.50  },
+  ]},
+  { name: 'Bioguard Balancepak', sizes: [
+      { label: '1 kg', price: 65.00 },
+  ]},
+  { name: 'Bioguard Balancepak Soda Ash', sizes: [
+      { label: '1.5 kg', price: 65.00 },
+  ]},
+  { name: 'Everblue Stabiliser', sizes: [
+      { label: '530 g', price: 115.00 },
+  ]},
+  { name: 'Bioguard Algishield', sizes: [
+      { label: '1.5 litre', price: 210.00 },
+  ]},
+  { name: 'Super Clear Tabs', sizes: [
+      { label: 'Each', price: 20.00 },
+  ]},
+  { name: 'Pool Acid', sizes: [
+      { label: '500 ml', price: 15.80 },
+  ]},
+];
+
+// ── Build chemical rows ──────────────────────────────────────────────
+function buildChemList() {
+  const list = document.getElementById('chem-list');
+  CHEMICALS.forEach((chem, ci) => {
+    const item = document.createElement('div');
+    item.className = 'chem-item';
+    item.dataset.idx = ci;
+
+    // top row: name + price badge
+    const top = document.createElement('div');
+    top.className = 'chem-item-top';
+    top.innerHTML = `<span class="chem-item-name">${chem.name}</span><span class="chem-price-badge" id="cpb-${ci}">R0.00</span>`;
+
+    // bottom row: size select + qty stepper + optional manual price
+    const bottom = document.createElement('div');
+    bottom.className = 'chem-item-bottom';
+
+    // Size dropdown
+    const sel = document.createElement('select');
+    sel.className = 'chem-size-select';
+    sel.id = `csel-${ci}`;
+    const blankOpt = document.createElement('option');
+    blankOpt.value = '';
+    blankOpt.textContent = '— select size —';
+    sel.appendChild(blankOpt);
+    chem.sizes.forEach((s, si) => {
+      const opt = document.createElement('option');
+      opt.value = si;
+      opt.textContent = s.label + (s.price !== null ? `  ·  R${s.price.toFixed(2)}` : '  ·  price TBD');
+      sel.appendChild(opt);
+    });
+
+    // Qty stepper
+    const qtyWrap = document.createElement('div');
+    qtyWrap.className = 'chem-qty-wrap';
+    qtyWrap.innerHTML =
+      `<button class="chem-qty-btn" onclick="changeQty(${ci},-1)" type="button">−</button>` +
+      `<span class="chem-qty-val" id="cqty-${ci}">1</span>` +
+      `<button class="chem-qty-btn" onclick="changeQty(${ci},1)" type="button">+</button>`;
+
+    // Manual price input (shown only when price is null)
+    const manualInput = document.createElement('input');
+    manualInput.type = 'number';
+    manualInput.className = 'chem-price-manual';
+    manualInput.id = `cman-${ci}`;
+    manualInput.placeholder = '0.00';
+    manualInput.min = '0';
+    manualInput.step = '0.50';
+    manualInput.style.display = 'none';
+    manualInput.oninput = () => updateChemItem(ci);
+
+    sel.onchange = () => updateChemItem(ci);
+
+    bottom.appendChild(sel);
+    bottom.appendChild(qtyWrap);
+    bottom.appendChild(manualInput);
+
+    item.appendChild(top);
+    item.appendChild(bottom);
+    list.appendChild(item);
+  });
+}
+
+function getChemState(ci) {
+  const chem = CHEMICALS[ci];
+  const sel = document.getElementById(`csel-${ci}`);
+  const qtyEl = document.getElementById(`cqty-${ci}`);
+  const manualEl = document.getElementById(`cman-${ci}`);
+  const sizeIdx = sel.value === '' ? null : parseInt(sel.value);
+  const qty = parseInt(qtyEl.textContent) || 1;
+  if (sizeIdx === null) return { selected: false, qty, unitPrice: 0, total: 0, label: '', manual: false };
+  const size = chem.sizes[sizeIdx];
+  const manual = size.price === null;
+  const unitPrice = manual ? (parseFloat(manualEl.value) || 0) : size.price;
+  return { selected: true, qty, unitPrice, total: unitPrice * qty, label: size.label, manual };
+}
+
+function updateChemItem(ci) {
+  const state = getChemState(ci);
+  const item = document.querySelector(`.chem-item[data-idx="${ci}"]`);
+  const badge = document.getElementById(`cpb-${ci}`);
+  const manualEl = document.getElementById(`cman-${ci}`);
+  const sel = document.getElementById(`csel-${ci}`);
+
+  // show/hide manual price input
+  if (state.selected) {
+    const sizeIdx = parseInt(sel.value);
+    manualEl.style.display = CHEMICALS[ci].sizes[sizeIdx].price === null ? 'block' : 'none';
+  } else {
+    manualEl.style.display = 'none';
+  }
+
+  if (state.selected && state.total > 0) {
+    badge.textContent = 'R' + state.total.toFixed(2);
+    item.classList.add('has-value');
+  } else if (state.selected) {
+    badge.textContent = 'R—';
+    item.classList.add('has-value');
+  } else {
+    badge.textContent = 'R0.00';
+    item.classList.remove('has-value');
+  }
+
+  recalc();
+}
+
+function changeQty(ci, delta) {
+  const el = document.getElementById(`cqty-${ci}`);
+  let val = parseInt(el.textContent) || 1;
+  val = Math.max(1, val + delta);
+  el.textContent = val;
+  updateChemItem(ci);
+}
+
+// ── Date ────────────────────────────────────────────────────────────
+const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const today = new Date();
+const yyyy = today.getFullYear();
+const mm = String(today.getMonth() + 1).padStart(2, '0');
+const dd = String(today.getDate()).padStart(2, '0');
+document.getElementById('visitDate').value = `${yyyy}-${mm}-${dd}`;
+document.getElementById('locDate').textContent = `${months[today.getMonth()]} ${today.getDate()}, ${yyyy}`;
+
+function syncDate() {
+  const val = document.getElementById('visitDate').value;
+  if (!val) return;
+  const [y, m, d] = val.split('-').map(Number);
+  if (!y || !m || !d) return;
+  document.getElementById('locDate').textContent = `${months[m - 1]} ${d}, ${y}`;
+}
+
+function toggleCheck(el) { el.classList.toggle('active'); }
+function toggleGreenCheck(el) { el.classList.toggle('green-active'); }
+
+function recalc() {
+  let chemSum = 0;
+  CHEMICALS.forEach((_, ci) => {
+    const state = getChemState(ci);
+    if (state.selected) chemSum += state.total;
+  });
+  const fee = parseFloat(document.getElementById('serviceFeeSelect').value) || 350;
+  const additional = parseFloat(document.getElementById('additionalFee').value) || 0;
+  document.getElementById('additionalFee').closest('.add-fee-wrap').classList.toggle('has-value', additional > 0);
+  document.getElementById('serviceFeeDisplay').textContent = 'R' + fee.toFixed(2);
+  document.getElementById('additionalFeeDisplay').textContent = 'R' + additional.toFixed(2);
+  document.getElementById('chemTotal').textContent = 'R' + chemSum.toFixed(2);
+  document.getElementById('chemSubtotalVal').textContent = 'R' + chemSum.toFixed(2);
+  document.getElementById('serviceTotalVal').textContent = 'R' + (fee + additional).toFixed(2);
+  document.getElementById('grandTotal').textContent = 'R' + (fee + additional + chemSum).toFixed(2);
+}
+
+function loadPhoto(input, which) {
+  const file = input.files[0];
+  if (!file) return;
+  const box = document.getElementById('box-' + which);
+  let img = box.querySelector('img');
+  if (!img) { img = document.createElement('img'); box.appendChild(img); }
+  // Revoke any previous object URL to free memory
+  if (img.dataset.objUrl) URL.revokeObjectURL(img.dataset.objUrl);
+  const url = URL.createObjectURL(file);
+  img.dataset.objUrl = url;
+  img.src = url;
+}
+
+let _whatsappUrl = '';
+
+function handleSubmit() {
+  const name   = document.getElementById('clientName').value.trim();
+  const mobile = document.getElementById('clientMobile').value.trim();
+  const date   = document.getElementById('visitDate').value;
+  const tech   = document.getElementById('techName').value.trim();
+  const notes  = document.getElementById('visitNotes').value.trim();
+
+  if (!name || !mobile || !date) { alert('Please fill in the client name, mobile number and visit date.'); return; }
+  if (!tech) { alert('Please enter the technician name.'); return; }
+
+  // ── Header ──
+  document.getElementById('r-name').textContent = name;
+  document.getElementById('r-address').textContent = document.getElementById('clientAddress').value.trim() || '—';
+  document.getElementById('r-estate').textContent = document.getElementById('estateSelect').value;
+  document.getElementById('r-date').textContent = date;
+  document.getElementById('r-tech').textContent = tech;
+
+  // ── Photos ──
+  const imgB = document.querySelector('#box-before img');
+  const imgA = document.querySelector('#box-after img');
+  const hasB = !!imgB;
+  const hasA = !!imgA;
+  const photoSection = document.getElementById('r-photo-section');
+
+  function makePhotoWrap(img, label, filename) {
+    if (img) {
+      return `<div class="report-photo-label">${label}</div>
+        <a href="${img.src}" target="_blank"><img class="report-photo" src="${img.src}" /></a>
+        <a class="report-photo-save" href="${img.src}" download="${filename}">⬇ Save ${label}</a>`;
+    }
+    return `<div class="report-photo-label">${label}</div><div class="report-no-photo">No photo</div>`;
+  }
+
+  if (hasB || hasA) {
+    photoSection.style.display = '';
+    document.getElementById('r-photo-before-wrap').innerHTML = makePhotoWrap(imgB, 'Before', 'pool-before.jpg');
+    document.getElementById('r-photo-after-wrap').innerHTML = makePhotoWrap(imgA, 'After', 'pool-after.jpg');
+  } else {
+    photoSection.style.display = 'none';
+  }
+
+  // ── Water Test ──
+  const readingLabels = ['Chlorine', 'pH', 'Alkalinity', 'Stabilizer'];
+  const waterTable = document.getElementById('r-water-table');
+  waterTable.innerHTML = '';
+  let hasReadings = false;
+  document.querySelectorAll('.card:nth-child(3) .check-row').forEach((row, i) => {
+    if (row.classList.contains('active')) {
+      hasReadings = true;
+      const val = row.querySelector('.r-input')?.value || '—';
+      waterTable.innerHTML += `<tr><td>${readingLabels[i]}</td><td>${val}</td></tr>`;
+    }
+  });
+  document.getElementById('r-water-section').style.display = hasReadings ? '' : 'none';
+
+  // ── Chemicals ──
+  const chemTable = document.getElementById('r-chem-table');
+  chemTable.innerHTML = '<tr style="background:#f8f9fc"><td style="font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted)">Chemical</td><td style="font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);text-align:right">Size / Qty</td><td style="font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);text-align:right">Price</td></tr>';
+  let hasChems = false;
+  let chemsText = '';
+  CHEMICALS.forEach((chem, ci) => {
+    const state = getChemState(ci);
+    if (state.selected) {
+      hasChems = true;
+      const priceStr = state.total > 0 ? `R${state.total.toFixed(2)}` : '—';
+      chemTable.innerHTML += `<tr><td>${chem.name}</td><td style="text-align:right;color:var(--text)">${state.label} × ${state.qty}</td><td style="text-align:right;font-family:'DM Mono',monospace">${priceStr}</td></tr>`;
+      chemsText += `  • ${chem.name} – ${state.label} × ${state.qty}${state.total > 0 ? ' (R' + state.total.toFixed(2) + ')' : ''}\n`;
+    }
+  });
+  document.getElementById('r-chem-section').style.display = hasChems ? '' : 'none';
+
+  // ── Services ──
+  const svcList = document.getElementById('r-svc-list');
+  svcList.innerHTML = '';
+  let hasSvcs = false;
+  let svcsText = '';
+  document.querySelectorAll('.card:nth-child(6) .check-row').forEach(row => {
+    if (row.classList.contains('active')) {
+      hasSvcs = true;
+      const label = row.querySelector('.chk-label').textContent;
+      svcsText += `  ✓ ${label}\n`;
+      svcList.innerHTML += `<div class="report-check-row"><div class="report-tick">✓</div>${label}</div>`;
+    }
+  });
+  document.getElementById('r-svc-section').style.display = hasSvcs ? '' : 'none';
+
+  // ── Cost ──
+  const serviceFee = document.getElementById('serviceFeeDisplay').textContent;
+  const addFee     = document.getElementById('additionalFeeDisplay').textContent;
+  const chemTotal  = document.getElementById('chemTotal').textContent;
+  const grandTotal = document.getElementById('grandTotal').textContent;
+  document.getElementById('r-svc-fee').textContent    = serviceFee;
+  document.getElementById('r-add-fee').textContent    = addFee;
+  document.getElementById('r-chem-total').textContent = chemTotal;
+  document.getElementById('r-grand-total').textContent = grandTotal;
+
+  // ── Notes ──
+  const notesSection = document.getElementById('r-notes-section');
+  if (notes) {
+    notesSection.style.display = '';
+    document.getElementById('r-notes').textContent = notes;
+  } else {
+    notesSection.style.display = 'none';
+  }
+
+  // ── Build WhatsApp message ──
+  const readingsText = (() => {
+    let t = '';
+    document.querySelectorAll('.card:nth-child(3) .check-row').forEach((row, i) => {
+      if (row.classList.contains('active')) {
+        const val = row.querySelector('.r-input')?.value || '—';
+        t += `  • ${readingLabels[i]}: ${val}\n`;
+      }
+    });
+    return t;
+  })();
+  const photoLine = (hasB && hasA) ? '📸 Before & after photos taken\n' : (hasB || hasA) ? '📸 Photo taken\n' : '';
+
+  // ── Format helpers ──
+  const divider = '─────────────────────';
+  const shortDiv = '───────────────';
+
+  // Water readings table
+  let readingsBlock = '';
+  if (readingsText) {
+    const readingLabels = ['Chlorine', 'pH', 'Alkalinity', 'Stabilizer'];
+    document.querySelectorAll('.card:nth-child(3) .check-row').forEach((row, i) => {
+      if (row.classList.contains('active')) {
+        const val = row.querySelector('.r-input')?.value || '—';
+        const label = readingLabels[i].padEnd(12);
+        readingsBlock += `  ${label}  ${val}\n`;
+      }
+    });
+  }
+
+  // Chemicals table
+  let chemsBlock = '';
+  if (chemsText) {
+    CHEMICALS.forEach((chem, ci) => {
+      const state = getChemState(ci);
+      if (state.selected) {
+        const priceStr = state.total > 0 ? `R${state.total.toFixed(2)}` : '—';
+        chemsBlock += `  • ${chem.name}\n    ${state.label} × ${state.qty}  →  ${priceStr}\n`;
+      }
+    });
+  }
+
+  const photoNote = (hasB && hasA)
+    ? '_(Before & after photos attached separately)_\n'
+    : (hasB || hasA) ? '_(Photo attached separately)_\n' : '';
+
+  const msg =
+`🏊 *WINELANDS POOL SERVICES*
+*Visit Report*
+${divider}
+
+👤 *Client:*  ${name}
+🏠 *Address:* ${document.getElementById('clientAddress').value.trim() || '—'}
+📍 *Estate:*  ${document.getElementById('estateSelect').value}
+📅 *Date:*    ${date}
+👷 *Tech:*    ${tech}
+${photoNote}
+${divider}
+💧 *WATER TEST RESULTS*
+${divider}
+${readingsBlock || '  No readings recorded\n'}
+${divider}
+🧪 *CHEMICALS USED*
+${divider}
+${chemsBlock || '  None recorded\n'}
+${divider}
+🔧 *SERVICES PERFORMED*
+${divider}
+${svcsText || '  None recorded\n'}
+${divider}
+💰 *COST SUMMARY*
+${divider}
+  Service fee       ${serviceFee}
+  Additional fee    ${addFee}
+  Chemicals         ${chemTotal}
+${shortDiv}
+  *TOTAL             ${grandTotal}*
+${divider}${notes ? `\n📝 *Notes:*\n${notes}\n${divider}` : ''}
+
+_Thank you for choosing Winelands Pool Services!_ 🌿`;
+
+  let raw = mobile.replace(/[\s\-\(\)]/g, '');
+  if (raw.startsWith('0')) raw = '27' + raw.slice(1);
+  if (raw.startsWith('+')) raw = raw.slice(1);
+  _whatsappUrl = 'https://wa.me/' + raw + '?text=' + encodeURIComponent(msg);
+
+  // Hide photo guide until after send
+  document.getElementById('photoGuide').style.display = 'none';
+
+  // Show modal
+  document.getElementById('reportModal').classList.add('open');
+  document.getElementById('reportModal').scrollTop = 0;
+}
+
+function closeReport() {
+  document.getElementById('reportModal').classList.remove('open');
+}
+
+function sendWhatsApp() {
+  window.open(_whatsappUrl, '_blank');
+  // Show photo guide after sending if photos exist
+  const hasPhotos = !!document.querySelector('#box-before img') || !!document.querySelector('#box-after img');
+  if (hasPhotos) {
+    document.getElementById('photoGuide').style.display = 'block';
+    // Scroll guide into view
+    setTimeout(() => document.getElementById('photoGuide').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300);
+  }
+}
+
+let _emailHref = '';
+
+function buildPrintHTML() {
+  const reportEl = document.querySelector('.report');
+  const clientName = document.getElementById('r-name').textContent;
+  const date = document.getElementById('r-date').textContent;
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Pool Service Report – ${clientName}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@500&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: white; color: #1a1a2e; padding: 24px; max-width: 600px; margin: 0 auto; }
+  .hdr { background: #0a2d6e; color: white; padding: 20px 24px 16px; border-radius: 12px 12px 0 0; }
+  .hdr-logo { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 4px; }
+  .hdr-title { font-size: 20px; font-weight: 600; }
+  .meta { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px; }
+  .meta-item label { font-size: 9px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; display: block; }
+  .meta-item span { font-size: 13px; color: white; font-weight: 500; }
+  .body { border: 1px solid #e0e6f0; border-top: none; border-radius: 0 0 12px 12px; padding: 0 20px 20px; }
+  .section { margin-top: 18px; }
+  .section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #6b7a99; padding-bottom: 6px; border-bottom: 1px solid #e0e6f0; margin-bottom: 8px; }
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 7px 8px; font-size: 13px; border-bottom: 1px solid #f0f3f9; }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { color: #6b7a99; }
+  td:last-child { text-align: right; font-weight: 500; }
+  .tick-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid #f0f3f9; font-size: 13px; }
+  .tick-row:last-child { border-bottom: none; }
+  .tick { width: 16px; height: 16px; background: #1e4a8c; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-size: 9px; color: white; font-weight: 700; flex-shrink: 0; }
+  .total-row { display: flex; justify-content: space-between; background: #0a2d6e; color: white; padding: 12px 16px; border-radius: 10px; margin-top: 10px; }
+  .total-label { font-size: 14px; font-weight: 600; }
+  .total-val { font-size: 20px; font-weight: 600; font-family: 'DM Mono', monospace; }
+  .notes { font-size: 13px; background: #f8f9fc; border-radius: 8px; padding: 10px 12px; line-height: 1.6; }
+  .photo-row { display: flex; gap: 10px; margin-top: 6px; }
+  .photo-row img { flex: 1; width: 48%; border-radius: 8px; border: 1px solid #e0e6f0; object-fit: cover; }
+  .footer { text-align: center; font-size: 11px; color: #6b7a99; margin-top: 20px; }
+  @media print { body { padding: 0; } }
+</style>
+</head>
+<body>
+${reportEl.querySelector('.report-header').outerHTML}
+<div class="body">${reportEl.querySelector('.report-body').innerHTML}</div>
+<div class="footer">Winelands Pool Services · Report generated ${new Date().toLocaleDateString('en-ZA')}</div>
+</body></html>`;
+}
+
+function openPDF() {
+  const clientName = document.getElementById('r-name').textContent;
+  const date = document.getElementById('r-date').textContent;
+  const printHTML = buildPrintHTML();
+  const blob = new Blob([printHTML], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const win = window.open(url, '_blank');
+  if (win) win.onload = () => setTimeout(() => win.print(), 500);
+}
+
+function sendEmail() {
+  const clientName = document.getElementById('r-name').textContent;
+  const date = document.getElementById('r-date').textContent;
+  const email = document.getElementById('clientEmail').value.trim();
+  const subject = encodeURIComponent(`Pool Service Visit Report – ${clientName} – ${date}`);
+  const body = encodeURIComponent(`Hi ${clientName},\n\nPlease find your pool service visit report details below.\n\nDate: ${date}\nEstate: ${document.getElementById('estateSelect').value}\nTechnician: ${document.getElementById('r-tech').textContent}\n\nFor the full formatted report, please ask your technician to share the PDF.\n\nKind regards,\nWinelands Pool Services`);
+  const href = `mailto:${email}?subject=${subject}&body=${body}`;
+  window.location.href = href;
+}
+
+function emailPDF() { openPDF(); }
+
+// ── Init ─────────────────────────────────────────────────────────────
+buildChemList();
+</script>
+<!-- REPORT MODAL -->
+<div class="modal-overlay" id="reportModal">
+  <div class="report">
+    <div class="report-header">
+      <div class="report-logo">Winelands Pool Service</div>
+      <div class="report-title">Visit Report</div>
+      <div class="report-meta">
+        <div class="report-meta-item"><span class="report-meta-label">Client</span><span class="report-meta-val" id="r-name">—</span></div>
+        <div class="report-meta-item"><span class="report-meta-label">Address</span><span class="report-meta-val" id="r-address">—</span></div>
+        <div class="report-meta-item"><span class="report-meta-label">Estate</span><span class="report-meta-val" id="r-estate">—</span></div>
+        <div class="report-meta-item"><span class="report-meta-label">Date</span><span class="report-meta-val" id="r-date">—</span></div>
+        <div class="report-meta-item"><span class="report-meta-label">Technician</span><span class="report-meta-val" id="r-tech">—</span></div>
+      </div>
+    </div>
+    <div class="report-body">
+
+      <!-- Photos -->
+      <div class="report-section" id="r-photo-section">
+        <div class="report-section-title">Photos</div>
+        <div class="report-photo-row" style="display:flex;gap:8px;">
+          <div class="report-photo-wrap" id="r-photo-before-wrap"></div>
+          <div class="report-photo-wrap" id="r-photo-after-wrap"></div>
+        </div>
+      </div>
+
+      <!-- Water Test -->
+      <div class="report-section" id="r-water-section">
+        <div class="report-section-title">Water Test Results</div>
+        <table class="report-table" id="r-water-table"></table>
+      </div>
+
+      <!-- Chemicals -->
+      <div class="report-section" id="r-chem-section">
+        <div class="report-section-title">Chemicals Used</div>
+        <table class="report-table" id="r-chem-table"></table>
+      </div>
+
+      <!-- Services -->
+      <div class="report-section" id="r-svc-section">
+        <div class="report-section-title">Services Performed</div>
+        <div id="r-svc-list"></div>
+      </div>
+
+      <!-- Cost -->
+      <div class="report-section">
+        <div class="report-section-title">Cost Summary</div>
+        <table class="report-cost-table">
+          <tr><td>Service Fee</td><td id="r-svc-fee">—</td></tr>
+          <tr><td>Additional Fee</td><td id="r-add-fee">—</td></tr>
+          <tr><td>Chemicals</td><td id="r-chem-total">—</td></tr>
+        </table>
+        <div class="report-total-row">
+          <span class="report-total-label">Total</span>
+          <span class="report-total-val" id="r-grand-total">—</span>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="report-section" id="r-notes-section">
+        <div class="report-section-title">Notes</div>
+        <div class="report-notes" id="r-notes"></div>
+      </div>
+
+    </div><!-- /report-body -->
+
+    <!-- Action buttons -->
+    <div class="report-actions">
+      <button class="action-btn btn-back" onclick="closeReport()">✕</button>
+      <button class="action-btn btn-pdf" onclick="openPDF()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1.5" stroke="white" stroke-width="1.3"/><path d="M4 4h6M4 6.5h6M4 9h3.5" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
+        View PDF
+      </button>
+      <button class="action-btn btn-mailto" id="btnEmail" onclick="sendEmail()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="#1e4a8c" stroke-width="1.3"/><path d="M1 4l6 4 6-4" stroke="#1e4a8c" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Email
+      </button>
+      <button class="action-btn btn-whatsapp" onclick="sendWhatsApp()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1A6 6 0 1 1 1 7c0-1 .25-2 .7-2.8L1 1l3.3.7A6 6 0 0 1 7 1z" stroke="white" stroke-width="1.3"/><path d="M5 5.5c.4.9 1.3 1.8 2.3 2.2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
+        WhatsApp
+      </button>
+    </div>
+
+    <!-- Photo attach guide — shown after WhatsApp send when photos exist -->
+    <div class="photo-attach-guide" id="photoGuide">
+      📎 <strong>Photos saved — attach them now:</strong>
+      <ol>
+        <li>Tap <strong>Save Before</strong> / <strong>Save After</strong> above to download to your gallery</li>
+        <li>Go to the WhatsApp chat that just opened</li>
+        <li>Tap the 📎 attach icon and select the saved photos</li>
+      </ol>
+    </div>
+
+  </div><!-- /report -->
+</div><!-- /modal -->
+
+</body>
+</html>
