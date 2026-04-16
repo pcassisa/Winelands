@@ -268,4 +268,121 @@ document.getElementById('visitDate').value = yyyy + '-' + mm + '-' + dd;
 document.getElementById('locDate').textContent = months[today.getMonth()] + ' ' + today.getDate() + ', ' + yyyy;
 
 function syncDate() {
-  const val = document.getElem
+  const val = document.getElementById('visitDate').value;
+  if (!val) return;
+  const parts = val.split('-');
+  const d = new Date(parts[0], parts[1] - 1, parts[2]);
+  document.getElementById('locDate').textContent = months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+}
+
+function recalc() {
+  const inputs = document.querySelectorAll('.chem-price-input');
+  let chemSum = 0;
+  inputs.forEach(inp => { chemSum += parseFloat(inp.value) || 0; });
+  const fee = parseFloat(document.getElementById('serviceFeeSelect').value) || 350;
+  const additional = parseFloat(document.getElementById('additionalFee').value) || 0;
+  document.getElementById('serviceFeeDisplay').textContent = 'R' + fee.toFixed(2);
+  document.getElementById('additionalFeeDisplay').textContent = 'R' + additional.toFixed(2);
+  document.getElementById('chemTotal').textContent = 'R' + chemSum.toFixed(2);
+  document.getElementById('grandTotal').textContent = 'R' + (fee + additional + chemSum).toFixed(2);
+}
+
+function sanitizeMobile(raw) {
+  // Strip all non-digit and non-plus characters
+  let n = raw.replace(/[^\d+]/g, '');
+  // Remove leading +
+  if (n.startsWith('+')) n = n.slice(1);
+  // If starts with 00 (international dialling prefix), strip the 00
+  if (n.startsWith('00')) n = n.slice(2);
+  // If starts with 0, assume SA and replace with country code 27
+  if (n.startsWith('0')) n = '27' + n.slice(1);
+  // All other formats already have country code — leave as-is
+  // Final safety: strip any remaining non-digit chars
+  n = n.replace(/\D/g, '');
+  return n;
+}
+
+function handleSubmit() {
+  const name = document.getElementById('clientName').value.trim();
+  const mobile = document.getElementById('clientMobile').value.trim();
+  const email = document.getElementById('clientEmail').value.trim();
+  const date = document.getElementById('visitDate').value;
+  const tech = document.getElementById('techName').value.trim();
+  const notes = document.getElementById('visitNotes').value.trim();
+
+  if (!name || !mobile || !date) { alert('Please fill in the client name, mobile number and visit date before submitting.'); return; }
+  if (!tech) { alert('Please enter the technician name before submitting.'); return; }
+
+  // Collect water readings
+  const readingLabels = ['Chlorine', 'pH', 'Alkalinity', 'Stabilizer'];
+  const readingRows = document.querySelectorAll('.reading-check');
+  let readingsText = '';
+  readingRows.forEach((row, i) => {
+    if (row.classList.contains('active')) {
+      const val = row.querySelector('.r-input').value || '—';
+      readingsText += `  • ${readingLabels[i]}: ${val}\n`;
+    }
+  });
+
+  // Collect services performed
+  const svcRows = document.querySelectorAll('.svc-check');
+  let svcsText = '';
+  svcRows.forEach(row => {
+    if (row.classList.contains('active')) {
+      svcsText += `  ✓ ${row.querySelector('.s-label').textContent}\n`;
+    }
+  });
+
+  // Collect chemicals used
+  const chemRows = document.querySelectorAll('.chem-row');
+  let chemsText = '';
+  chemRows.forEach(row => {
+    const chemName = row.querySelector('.chem-name-col').textContent.trim();
+    const qty = row.querySelector('.chem-select').value;
+    const price = row.querySelector('.chem-price-input').value;
+    if (qty && qty !== '—' && qty !== '') {
+      chemsText += `  • ${chemName}: ${qty}${price ? ' (R' + parseFloat(price).toFixed(2) + ')' : ''}\n`;
+    }
+  });
+
+  // Collect totals
+  const serviceFee = document.getElementById('serviceFeeDisplay').textContent;
+  const additionalFee = document.getElementById('additionalFeeDisplay').textContent;
+  const chemTotal = document.getElementById('chemTotal').textContent;
+  const grandTotal = document.getElementById('grandTotal').textContent;
+
+  // Format the WhatsApp message
+  const msg =
+`Hi ${name}, here is your Winelands Pool Service visit report:
+
+📅 Date: ${date}
+👷 Technician: ${tech}
+
+💧 Water Test Results:
+${readingsText || '  No readings recorded\n'}
+🔧 Services Performed:
+${svcsText || '  None recorded\n'}
+${chemsText ? `🧪 Chemicals Used:\n${chemsText}\n` : ''}💰 Cost Summary:
+  • Service fee: ${serviceFee}
+  • Additional fee: ${additionalFee}
+  • Chemicals: ${chemTotal}
+  • *Total: ${grandTotal}*
+${notes ? `\n📝 Notes: ${notes}` : ''}
+Thank you for choosing Winelands Pool Service! 🏊`;
+
+  const cleanNumber = sanitizeMobile(mobile);
+  const waUrl = 'https://wa.me/' + cleanNumber + '?text=' + encodeURIComponent(msg);
+  window.open(waUrl, '_blank');
+}
+
+// Register service worker for offline support
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('Service Worker registered:', reg.scope))
+      .catch(err => console.log('Service Worker registration failed:', err));
+  });
+}
+</script>
+</body>
+</html>
