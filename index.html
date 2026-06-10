@@ -617,22 +617,6 @@ body {
       <div id="mobile-pick-preview" style="display:none;font-size:11px;color:var(--green);font-weight:600;margin-top:3px;padding-left:2px;"></div>
     </div>
     <div class="field"><label>Visit Date</label><input type="date" id="visitDate" onchange="syncDate()" /></div>
-    <div class="field">
-      <label>Service Rate</label>
-      <select id="serviceCost">
-        <option value="">— select rate —</option>
-        <option value="150">R 150</option>
-        <option value="160">R 160</option>
-        <option value="165">R 165</option>
-        <option value="180">R 180</option>
-        <option value="185">R 185</option>
-        <option value="200">R 200</option>
-        <option value="220">R 220</option>
-        <option value="250">R 250</option>
-        <option value="300">R 300</option>
-        <option value="350">R 350</option>
-      </select>
-    </div>
   </div>
 
   <!-- WATER TEST -->
@@ -676,6 +660,7 @@ body {
     <div class="check-row" onclick="toggleCheck(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><span class="chk-label">Vacuum, Skim, Brush, Weir &amp; Pump Cleans</span></div>
     <div class="check-row" onclick="toggleCheck(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><span class="chk-label">Check Pump, Sump, APC, Timer</span></div>
     <div class="check-row" onclick="toggleCheck(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><span class="chk-label">Check Filter, Suction Leaks, APC hoses</span></div>
+    <div class="check-row" onclick="toggleCheck(this)"><div class="chk-box"><span class="chk-mark">✓</span></div><span class="chk-label">Backwash</span></div>
   </div>
 
   <!-- CLOSE OUT -->
@@ -1493,7 +1478,6 @@ ${divider}
 📍 *Estate:*  ${estate}
 📅 *Date:*    ${date}
 👷 *Tech:*    ${tech}
-💰 *Service Rate:* ${document.getElementById('serviceCost').value ? 'R' + document.getElementById('serviceCost').value : '—'}
 ${divider}
 💧 *WATER TEST RESULTS*
 ${divider}
@@ -1640,6 +1624,7 @@ function logToSheets() {
     const svc1 = svcRows[0]?.classList.contains('active') ? 'Yes' : 'No';
     const svc2 = svcRows[1]?.classList.contains('active') ? 'Yes' : 'No';
     const svc3 = svcRows[2]?.classList.contains('active') ? 'Yes' : 'No';
+    const svc4 = svcRows[3]?.classList.contains('active') ? 'Yes' : 'No';
 
     // ── 2 closeout columns ──
     const coRows = document.querySelectorAll('#closeout-card .check-row');
@@ -1672,15 +1657,14 @@ function logToSheets() {
       chem8: chemQty(7),            // Alum Powder
       chem9: chemQty(8),            // Shock (500g)
       // 3 services
-      svc1, svc2, svc3,
+      svc1, svc2, svc3, svc4,
       // 4 parts → 8 columns
       part1, part2,           // Vacuum Weir Lid, Weir Basket
       part3, part4, part5, part6, // Hose types
       part7, part8,           // Diaphragm types
       // 2 closeout
       co1, co2, co3,
-      notes:       document.getElementById('visitNotes').value.trim(),
-      serviceCost: document.getElementById('serviceCost').value || '—'
+      notes:       document.getElementById('visitNotes').value.trim()
     };
 
     showToast('📋 Saving to log...', '#1e4a8c');
