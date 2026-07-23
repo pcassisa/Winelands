@@ -750,7 +750,7 @@ const PARTS = [
       { label: 'Dominator APC End',    price: 250.00 },
       { label: 'Zodiac Click-On Hose', price: 210.00 },
   ]},
-  { name: 'Diaphragm', price: null, sizes: [
+  { name: 'Diaphragm', price: null, multi: true, sizes: [
       { label: 'Zodiac Slant', price: 175.00 },
       { label: 'Zodiac Blunt', price: 175.00 },
   ]},
@@ -1607,14 +1607,12 @@ function logToSheets() {
     const part5 = hoseFind('Dominator APC End');
     const part6 = hoseFind('Zodiac Click-On Hose');
 
-    // Diaphragm — 2 separate columns
+    // Diaphragm — 2 separate columns (multi)
     const diagState = getPartState(3);
     const diagFind = (label) => {
-      if (diagState.multi) {
-        const found = diagState.selected?.find(s => s.label === label);
-        return found ? String(found.qty) : '—';
-      }
-      return (diagState.selected && diagState.label === label) ? String(diagState.qty) : '—';
+      if (!diagState.multi) return '—';
+      const found = diagState.selected.find(s => s.label === label);
+      return found ? String(found.qty) : '—';
     };
     const part7 = diagFind('Zodiac Slant');
     const part8 = diagFind('Zodiac Blunt');
