@@ -1667,22 +1667,27 @@ function logToSheets() {
 
     showToast('📋 Saving to log...', '#1e4a8c');
 
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', SHEET_URL, true);
-    xhr.setRequestHeader('Content-Type', 'text/plain');
-    xhr.onload = () => {
-      if (xhr.status === 0 || xhr.status === 200) {
-        showToast('✓ Visit logged to Google Sheets', '#0f7a3e');
-      } else {
-        console.error('Sheets XHR status:', xhr.status);
-        showToast('⚠ Could not reach Google Sheets', '#c0392b');
-      }
-    };
-    xhr.onerror = () => {
-      console.error('Sheets XHR error');
-      showToast('⚠ Could not reach Google Sheets', '#c0392b');
-    };
-    xhr.send(JSON.stringify(payload));
+    // Use navigator.sendBeacon if available — most reliable on mobile
+    const blob = new Blob([JSON.stringify(payload)], { type: 'text/plain' });
+    if (navigator.sendBeacon && navigator.sendBeacon(SHEET_URL, blob)) {
+      showToast('✓ Visit logged to Google Sheets', '#0f7a3e');
+    } else {
+      // Fallback to fetch
+      fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify(payload)
+      })
+      .then(() => showToast('✓ Visit logged to Google Sheets', '#0f7a3e'))
+      .catch(() => {
+        // Final fallback — XHR
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', SHEET_URL, true);
+        xhr.onload = () => showToast('✓ Visit logged to Google Sheets', '#0f7a3e');
+        xhr.onerror = () => showToast('⚠ Could not reach Google Sheets', '#c0392b');
+        xhr.send(JSON.stringify(payload));
+      });
+    }
 
   } catch (err) {
     console.error('logToSheets error:', err);
